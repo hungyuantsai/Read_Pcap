@@ -14,6 +14,8 @@
 #include "ethertype.h"
 #include <unistd.h>
 
+/* https://www.itread01.com/content/1545589271.html */
+
 #define IFSZ 16
 #define FLTRSZ 120
 #define MAXHOSTSZ 256
@@ -106,7 +108,7 @@ static const char *mac2str(const u_char ether_addr_octet[ETHER_ADDR_LEN]) {
     return (i < 17 ? NULL : a);
 }
 
-/* https://www.itread01.com/content/1545589271.html */
+/* 印出 16 進位的封包內容 */
 void print_hex_ascii_line(const u_char *payload, int len, int offset) {
 
 	int i;
@@ -294,6 +296,11 @@ void got_packet(u_char *args, const struct pcap_pkthdr *header, const u_char *pa
 		case IPPROTO_IP:
 			printf("  IP\n");
 			return;
+        case IPPROTO_OSPFIGP:
+            printf("  OSPF\n");
+            printf("   Src : %s\n", inet_ntoa(ip->ip_src));
+			printf("   Dst : %s\n", inet_ntoa(ip->ip_dst));
+            return;
 		default:
 			printf("  others , not defined\n");
 			return;
